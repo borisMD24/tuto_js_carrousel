@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/master.css">
+    <title>Carrousel JavaScript</title>
+
+    <link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+    <div class="content">
+        <div class="header">
+            Créer un Carrousel en JavaScript vanilla
+        </div>
+        <div class="title">
+            Introduction
+        </div>
+        Le JavaScript est un langage front-end puissant et, quand il est allié avec du css, nous pouvons créer une page plus qu'intéressante. <br>
+        <br>
+        Voici <a href="https://borismd24.github.io/insomnia/3daf.html" target="_blank"> un exemple délibérément "overkill"</a> <br>
+        <br>
+        aujourd'hui, nous allons apprendre a créer un simple Carrousel comme celui-ci : <a href="https://borismd24.github.io/d5/" target="_blank">Accéder a la page</a>
+
+        <div class="title">
+            Analyse
+        </div>
+        Pour un débutant absolu en front-end, comment peut-on attaquer ceci? Je vais essayer de vous proposer une méthode absolue!
+        <ol>
+            <li>Découpage</li>
+            <li>Réalisation</li>
+            <li>Tests</li>
+        </ol>
+        Vous etes decus? Je comprends... <br>
+        Mais cette méthode est particulierement efficace pour tout types de problemes.
+        <div class="title">
+            Le Découpage:
+        </div>
+        On a un Carrousel qui est fait de :
+        <ul>
+            <li>Un container</li>
+            <li>Des sections contenant nos diapositives :</li>
+            <ul>
+                une diapositive étant
+                <li>
+                    une partie texte
+                </li>
+                <li>une partie image</li>
+            </ul>
+            <li>je vais aussi ajouter un wrapper vous comprendrez pourquoi un peu plus tard</li>
+        </ul>
+        <div class="title">
+            Un peu de css :
+        </div>
+        Encore une fois, on vas découper le probleme:
+        <ul>
+            <li>il faut qu'une diapositive fasse 100% de la taille du conatiner</li>
+            <li>pour simplifier le probleme, le wrapper fera 100% et 80vh(80% de la hauteur de l'ecran)</li>
+            <li>les diapos doivent etre en colonne pour le defilement vertical</li>
+        </ul>
+        Donc on peut deja ecrire dans le HTML:
+        <pre>
+            <code class="html">
+                &lt div class="container">
+                    &lt div class="wrapper">
+                        &lt div class="diapo">
+                            
+                        &lt /div>
+                        &lt div class="diapo">
+                            
+                        &lt /div>
+                        &lt div class="diapo">
+                            
+                        &lt /div>
+                        &lt div class="diapo">
+                            
+                        &lt /div>
+                    &lt /div>
+                &lt /div>
+            </code>
+        </pre>
+        Et ensuite, le CSS
+        <pre>
+            <code class="css">
+                .container{
+                    width : 100%;
+                    height : 80vh;
+                }
+                .wrapper{
+                    width : 100%;
+                    height : 100%;
+                }
+                .diapo{
+                    width : 100%;
+                    height :100%;
+                }
+            </code>
+        </pre>
+        Ce qui va donner (j'ai colore les divs et n'en ai mit que deux pour plus de lisibilite):
+        <div class="container">
+        <div class="wrapper">
+            <div class="diapo r">
+                
+            </div>
+            <div class="diapo b">
+                
+            </div>
+        </div>
+        </div>
+        <div class="container">
+
+        </div>
+        <div class="title">
+            Layout des diapositives
+        </div>
+        bien! Maintenant, il ne nous reste plus qu'a gerer le layout des diapositives!
+        Je vais opter pour un <pre> 
+        <code class="css"> display : grid; </code> </pre>
+        c'est parti!
+        
+        <pre><code class="css">
+            .diapo{
+                width: 100%;
+                height: 100%;
+            }
+        </code> </pre>
+        il ne nous reste plus qu'a remplir ces colonnes:
+        <pre><code class="css">
+            .diapo .img{
+                position: relative; /*dis "hey, Maintenant, chaque element qui aura une position absolute dans mes enfants se positionnera relativement a moi"*/
+                width: 100%;
+                height: 100%;
+            }
+            .diapo .img img{ /*l'absence de "." devant img veut dire que l'on selectionne directement le tag &lt img>*/
+                display: block;
+                max-width: 75%;
+                max-height: 75%;
+                position: absolute;
+                top: 50%;   /* le bord haut de l'image se place a 50% de la hauteur de la div mere*/
+                left: 50%;  /* le bord gauche de l'image se situe a 50% de la hauteur de la div mere*/
+                
+                transform: translateX(-50%) translateY(-50%); /* deplace l'image de 50% de sa taille sur l'axe X et Y pour corriger le decalage du top et du left*/
+              }
+              .diapo .text{
+                height: 100%;
+                width: 100%;
+                display: grid;
+                grid-template-rows: 30% 70%;
+                background: rgba(0,0,0,0.14); /*teinte legerement l'arriere-plan pour plus de contrast et de lisibilite*/
+              }
+              
+              .diapo .text .title{
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: flex-end;
+                justify-content: center;
+                font-size: 4em;
+                font-weight: bold;
+                color: whitesmoke;
+              }
+              
+              .diapo .text .body{
+                margin: 5%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              }
+              
+              .diapo .text .body .content{
+                font-size: 1.5em;
+                color : whitesmoke;
+              }
+        </code> </pre>
+        donc Maintenant le HTML:
+        <pre>
+            <code class="=html">
+                &lt div class="container">
+                    &lt div class="wrapper">
+                        &lt div class="diapo">
+                            &lt div class="img">
+                                &lt img src="https://images.pexels.com/photos/1294943/pexels-photo-1294943.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="" srcset="">
+                            &lt /div>
+                            &lt div class="text">
+                                &lt div class="title">
+                                    coucou
+                                &lt /div>
+                                &lt div class="body">
+                                    &lt div class="content">
+                                        c'est le texte
+                                    &lt /div>
+                                &lt /div>
+                            &lt /div>
+                        &lt /div>
+                    &lt /div>
+                &lt /div>
+            </code>
+        </pre>
+        qui donne :
+        <div class="container">
+        <div class="wrapper">
+            <div class="diapo">
+                <div class="img">
+                    <img src="https://images.pexels.com/photos/1294943/pexels-photo-1294943.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="" srcset="">
+                </div>
+                <div class="text">
+                    <div class="title">
+                        coucou
+                    </div>
+                    <div class="body">
+                        <div class="content">
+                            c'est le texte
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        tout est bon! Il est temps pour...
+        <div class="title">
+            Le JavaScript
+        </div>
+        Avant tout, laissez moi vous parler de la propriete <a href="https://developer.mozilla.org/fr/docs/Web/CSS/transform" target="_blank">transform</a> en css. On l'a utilise plus haut, elle sert a deplacer ou transformer un element en css librement et c'est pil-poil ce qu'on veut faire! <br>
+        vu que notre Carrousel defilera sur l'axe Y, on va se concentrer sur la propriete:
+        <pre>
+            <code class="css">
+                transform : translateY();
+            </code>
+        </pre>
+        en JavaScript, il y a une maniere tres simple de changer le style d'un element. Comme ca : <span id="exStyle">Cliquez-moi</span><br>
+        <br>
+        Voici le code :
+        <pre>
+            <code class="js">
+                document.getElementById("exStyle").addEventListener("click", function(e){
+                    this.style.color = "red";
+                  })
+            </code>
+        </pre>
+        aussi simple que ca! <br> <br>
+        Il nous reste deux problemes avant de s'attaquer au JavaScript:
+        <ul>
+            <li>l'absence de transition-duration (je vous laisserai regler ca dans le CSS</li>
+            <li>comment on dit a JavaScript d'attendre?</li>
+        </ul>
+        En effet, on a beau retourner la documentation de JavaScript, il n'y a pas de fonction "delay" ou "sleep". Il y a bien "setTimeout" mais c'est tres vite limite. Laissez moi vous en fournir une et expliquer comment l'utiliser :
+        <pre>
+            <code class="js">
+                function sleep(ms){
+                    return new Promise(r => setTimeout(r, ms));
+                  }
+            </code>
+        </pre>
+        soyons clair : si vous suivez ce tuto, vous n'avez certainement pas le niveau pour comprendre les Promise (mais <a href="https://www.youtube.com/watch?v=uUZxHkcidps" target="_blank">voici une super video de grafikart</a> qui vous permettra de mieux comprendre).<br>
+        <br>
+        Cette fonction ne fonctionne que quand elle est appelee dans les  fonctions asynchrones que l'on declare comme ca : 
+        <pre>
+            <code class="js">
+                async function nomDeLaFontion(){
+                    // code
+                }
+            </code>
+        </pre>
+        maintenant, on doit dire a la fonction "d'attendre" grace au mot clef "await". Faisons une fonctions "hey" qui affichera "hey" toutes les secondes et a l'infini dans la console :
+
+        <pre>
+            <code class="js">
+                function sleep(ms){
+                    return new Promise(r => setTimeout(r, ms));
+                  }
+                  async function hey(){
+                      while(true){
+                          console.log("hey");
+                          await sleep(1000);
+                      }
+                  }
+            </code>
+        </pre>
+        maintenant qu'on a compris comment ca fonctionne passons au concret : <br> <br>
+        donnons un id au wrapper :
+        <pre>
+            <code class="html">
+                &lt div class="container">
+                    &lt div class="wrapper" id="wrapper">
+                        &lt div class="diapo">
+                            &lt div class="img">
+                                &lt img src="https://images.pexels.com/photos/1294943/pexels-photo-1294943.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="" srcset="">
+                            &lt /div>
+                            &lt div class="text">
+                                &lt div class="title">
+                                    coucou
+                                &lt /div>
+                                &lt div class="body">
+                                    &lt div class="content">
+                                        c'est le texte
+                                    &lt /div>
+                                &lt /div>
+                            &lt /div>
+                        &lt /div>
+                    &lt /div>
+                &lt /div>
+            </code>
+        </pre>
+        Maintenant, dans notre JavaScript créons une constante :
+        <pre>
+            <code class="js">
+                const wrapper = document.getElementById("wrapper");
+            </code>
+        </pre>
+        et une autre qui aura pour valeur la hauteur en pixels du container
+        <pre>
+            <code class="js">
+                const h = wrapper.parentElement.offsetHeight;
+            </code>
+        </pre>
+        et maintenant, une autre qui compte le nombre de diapositives dans le wrapper
+        <pre>
+            <code class="js">
+                const n = wrapper.childElementCount;
+            </code>
+        </pre>
+        Voila. Passons au vif du sujet :
+        la fonction qui permettra de faire defiler le Carrousel:
+        <pre>
+            <code class="js">
+                const wrapper = document.getElementById("wrapper");
+                const h = wrapper.parentElement.offsetHeight;
+                const n = wrapper.childElementCount;
+                function sleep(ms){
+                   return new Promise(r => setTimeout(r, ms));
+                }
+                async function scrollCarrousel(){
+                    while(true){ // ce while permettra de faire ce qu'il contient a l'infini
+                        for(let i = 0; i &lt; n; i++){ // ce for permettra de faire defiler les diapositives une par unes
+                            wrapper.style.transform = `translateY(${i*h}px)`; // les quotes ` permettent l'interpolation grace a ${}
+                            await sleep(5000);
+                        }  
+                    }
+                }
+            </code>
+        </pre>
+        Voila. on a un embryon de Carrousel que je vous laisserai ameliorer, il y a quelques bugs mais vous avez la marche a suivre. <br> <br>
+        Je vous laisse aussi le repo github du Carrousel ultilise comme exemple (le code repond a des besoins specifiques et peut paraitre cracra mais vous pouvez vous en inspirer pour ameliorer et corriger celui-ci) : <a href="https://github.com/borisMD24/d5" target="_blank">Lien du repository</a>
+    </div>
+    </div>
+    <div class="footer">
+
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html>
